@@ -40,7 +40,25 @@ def abrir_chamado(tipo, descricao, usuario_id, data_abertura, departamento):
         return {"status":"erro", "mensagem":f"Erro ao abrir chamado {e}"}
     
 
+def listar_chamados_usuario(usuario_id):
+    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
+    cursor = con.cursor()
+    try:
+        cursor.execute("SELECT tipo, descricao, status, data_abertura, departamento FROM chamados WHERE usuario_id = ?", (usuario_id,))
+        linhas = cursor.fetchall()
+        chamados_usuario = [{
+            "tipo":linha[0],
+            "Descricao":linha[1],
+            "status":linha[2],
+            "data_abertura":linha[3],
+            "departamento":linha[4]
+            
+        }for linha in linhas]
+        return {"status":"sucesso","chamados":chamados_usuario}
+    except Exception as e:
+        print(e)
+        return {"status":"erro", "mensagem":"Erro ao carregar chamados"}
+   
 
-print(abrir_chamado("Software", "Meu aoki parou", 1, "19/08/2026", 'P&D'))    
 
 

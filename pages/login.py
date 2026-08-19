@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 import os
+import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from database.funcoes import fazer_login
 
@@ -21,6 +22,7 @@ if "usuario" not in st.session_state:
         if resultado["status"] == "logado":
             st.session_state["usuario"] = resultado
             st.success(f"Bem vindo {resultado["nome"]} você tem permições de {resultado["acesso"]}")
+            time.sleep(2)
             
             # ---- Ir para as outras paginas
             if resultado["acesso"] == "suporte":
