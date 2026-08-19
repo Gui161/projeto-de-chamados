@@ -9,7 +9,7 @@ st.title("Sistema de chamados Intermetro")
 
 if "usuario" not in st.session_state:
     with st.form("formulario_login"):
-        email = st.text_input(label="E-mail", placeholder="@intermetro.com.br", key="email", persist_state="session")
+        email = st.text_input(label="E-mail", value="@intermetro.com.br", key="email", persist_state="session")
         senha = st.text_input(label="Senha", type="password",key="senha", persist_state="session" )
         st.write("---")
         logar_btn = st.form_submit_button(label="Login", width="stretch")
