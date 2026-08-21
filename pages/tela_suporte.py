@@ -22,7 +22,7 @@ data_abertura = data_abertura.strftime("%d/%m/%y")
 
 usuario = st.session_state["usuario"]
 
-abas = st.tabs(["Novo chamado", "listar chamados"])
+abas = st.tabs(["Novo chamado", "listar chamados", "Análise de chamados"])
 
 with abas[0]: # ---Novo chamado
     with st.form("formulario_de_solicitação", width="stretch", clear_on_submit=True):
@@ -77,6 +77,13 @@ with abas[1]:
                                 st.switch_page("pages/tela_chamado.py")
 
 
+with abas[2]:
+    st.title("Análise de chamdos", text_alignment="center", )
+    with st.container(border=True):
+        colunas = st.columns(2)
+        with colunas[0]:
+            mes_escolhido = st.date_input(label="Escolha um mês para filtra.", format="DD/MM/YYYY")
+    
 
                 
                         
