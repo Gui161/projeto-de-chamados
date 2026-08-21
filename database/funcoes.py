@@ -45,14 +45,18 @@ def listar_chamados_usuario(usuario_id):
     cursor = con.cursor()
     try:
         
-        cursor.execute("SELECT tipo, descricao, status, data_abertura, departamento FROM chamados WHERE usuario_id = ?", (usuario_id,))
+        cursor.execute("SELECT tipo, descricao, status, data_abertura, departamento, responsavel_id, tempo_gasto, solucao, id FROM chamados WHERE usuario_id = ?", (usuario_id,))
         linhas = cursor.fetchall()
         chamados_usuario = [{
             "tipo":linha[0],
-            "Descricao":linha[1],
+            "descricao":linha[1],
             "status":linha[2],
             "data_abertura":linha[3],
-            "departamento":linha[4]
+            "departamento":linha[4],
+            "responsavel_id": linha[5],
+            "tempo_gasto": linha[6],
+            "solucao": linha[7],
+            "id": linha[8]
             
         }for linha in linhas]
         return {"status":"sucesso","chamados":chamados_usuario}
@@ -65,7 +69,7 @@ def buscar_responsavel(chamado_id):
     con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
     cursor = con.cursor()
     try:
-        cursor.execute("SELECT u.nome FROM chamados c JOIN usuarios u ON c.responsavel_id = u.id WHERE c.id = ?", (chamado_id,) )
+        cursor.execute("SELECT u.nome,c.tempo_gasto, c.solucao  FROM chamados c JOIN usuarios u ON c.responsavel_id = u.id WHERE c.id = ?", (chamado_id,) )
         resultado = cursor.fetchone()
         if resultado:
             return {"status":"sucesso", "resultado":resultado}
@@ -75,7 +79,7 @@ def buscar_responsavel(chamado_id):
         return {"status":"erro", "resultado":e}
 
 
-        
+       
 
 
 def listar_chamados():

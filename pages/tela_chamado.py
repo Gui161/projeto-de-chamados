@@ -68,18 +68,29 @@ if "chamado_id" in st.session_state:
                         if c['status'] in ["ABERTO" , "EM ANDAMENTO" , "ABERTO 🟢" , "EM ANDAMENTO 🟡"]:
                             finalizar_btn = st.form_submit_button(label= "Finalizar chamado", use_container_width=True)
                             
-                            descricao_solucao = st.text_input(label="Descreva como Solucionou o problema")
+                            descricao_solucao = st.text_input(label="Solução do problema:")
                             tempo_minuto = st.number_input("Tempo gasto(em minutos)", min_value=0, step=2)
                             tempo_horas = tempo_minuto / 60
                             
                             
                             if finalizar_btn:
-                                finalizar = finalizar_chamado(st.session_state['chamado_id'], usuario['id'], tempo_horas, descricao_solucao)
-                                if finalizar['status'] == "sucesso":
-                                    st.success(f"Chamdo {c['id']}, finalizado por {usuario['nome']}")
+                                if descricao_solucao != "" and tempo_minuto > 0:
+                                    finalizar = finalizar_chamado(st.session_state['chamado_id'], usuario['id'], tempo_horas, descricao_solucao)
+                                    if finalizar['status'] == "sucesso":
+                                        st.success(f"Chamdo {c['id']}, finalizado por {usuario['nome']}")
+                                        st.rerun()
+                                    else:
+                                        st.error(finalizar['mensagem'])
+                                        
                                 else:
-                                    st.error(finalizar['mensagem'])
-                                
+                                    st.error("Preencha os campos de descrição e tempo de execução.")
+                        else:
+                            dados_finalizacao = buscar_responsavel(c['id'])
+                            if dados_finalizacao:
+                                st.write(f"Chamado finalizado por: {dados_finalizacao['resultado'][0]}")
+                                st.write(f"Tempo gasto:  {dados_finalizacao['resultado'][1] * 60} minutos")
+                                st.write(f"Descrição: {dados_finalizacao['resultado'][2]}.")
+                                        
                                 
                         
                     

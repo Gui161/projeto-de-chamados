@@ -4,7 +4,7 @@ import sys
 import os
 import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from database.funcoes import abrir_chamado, listar_chamados_usuario
+from database.funcoes import abrir_chamado, listar_chamados_usuario, buscar_responsavel
 
 st.set_page_config(layout="wide", page_title="chamados/usuarios")
 
@@ -50,9 +50,26 @@ with abas[1]: # --- Listar chamados
     chamados = listar_chamados_usuario(usuario["id"])
     if chamados["status"] == "sucesso":
         chamados_usuario = chamados["chamados"]
-        
         if chamados_usuario:
-            st.dataframe(chamados_usuario)
+            for chamado in chamados_usuario:
+                with st.container(border=True):
+                    colunas = st.columns(3)
+                    with colunas[0]:
+                        st.write(f"Tipo: {chamado['tipo']}")
+                        st.write(f"Data de abertura: {chamado['data_abertura']}")
+                    with colunas[1]:
+                        st.text_area(label="Descrição:",  value=chamado['descricao'], key=chamado['id'])
+                    with colunas[2]:
+                        st.write(f"Status: {chamado['status']}")
+                        if chamado['status'] == "EM ANDAMENTO 🟡":
+                            responsavel = buscar_responsavel(chamado['id'])
+                            st.write(f"Em execução por : {responsavel['resultado'][0]}...⌛")
+                        
+                        if chamado['status'] == "FECHADO 🔴":
+                            responsavel = buscar_responsavel(chamado['id'])
+                            st.write(f"Executado: {responsavel['resultado'][0]}")
+                            st.write(f"Solução: {responsavel['resultado'][2]}")
+                            
             
         else:
             st.info("Você ainda não abriu nenhum chamado.")
@@ -66,13 +83,6 @@ with abas[2]: # ---- Listar Solicitaçoes
     if chamados["status"] == "sucesso":
         chamados_usuario = chamados["chamados"]
         if chamados_usuario:
-            for c in chamados_usuario:
-                if c["status"] == "ABERTO":
-                    c["status"] = "ABERTO  🟢"
-                elif c["status"] == "FECHADO":
-                    c["status"] = "FECHADO  🔴"
-                elif c["status"] == "Em ANDAMENTO":
-                    c["status"] = "EM ANDAMENTO  🟡"
             solicitacoes_tbl = []
             for solicitacoes in chamados_usuario:
                 if solicitacoes["tipo"] == "Solicitação de compra":

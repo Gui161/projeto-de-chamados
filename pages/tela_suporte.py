@@ -56,7 +56,7 @@ with abas[1]:
     if chamados['status'] == "sucesso":
         chamado = chamados['chamados']
         if chamado:
-            filtro_status = st.multiselect(label="Filtar por status", options=["ABERTO", "EM ANDAMENTO", "FECHADO"])
+            filtro_status = st.multiselect(label="Filtar por status", options=["ABERTO 🟢", "EM ANDAMENTO 🟡", "FECHADO 🔴"])
             for c in chamado:
                 if c['status'] in filtro_status:
                     with st.form(f"chamado {c["id"]}"):
