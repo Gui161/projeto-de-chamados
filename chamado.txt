@@ -1,0 +1,1 @@
+{'id': 1, 'tipo': 'Software', 'descricao': 'Meu aoki parou', 'status': 'ABERTO', 'data_abertura': '19/08/2026', 'setor': 'P&D', 'responsavel_id': None, 'tempo_gasto': None, 'solucao': None, 'usuario': 'Luiz Guilherme da Silva Urbaneja', 'email': 'pdi@intermetro.com.br'}

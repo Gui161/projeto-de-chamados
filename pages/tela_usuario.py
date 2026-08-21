@@ -20,9 +20,9 @@ usuario = st.session_state["usuario"]
 
 abas = st.tabs(["Novo Chamado", "Meus chamados", "Minhas solicitações"])
 
-with abas[0]:
+with abas[0]: # ---Novo chamado
     with st.form("formulario_de_solicitação", width="stretch", clear_on_submit=True):
-        st.title("Novo chamado", text_alignment="center")
+        st.markdown("# Novo chamado 📝", text_alignment="center")
         nome = st.text_input(label="Nome:", value=usuario["nome"])
         email = st.text_input(label="email", value=usuario["email"])
         tipo = st.selectbox(label="Selecione o tipo de chamado", options=["Hardware", "Software", "Redes", "Solicitação de compra" ])
@@ -45,27 +45,34 @@ with abas[0]:
             st.error("Por favor descreva o motivo do seu chamado.")
         
         
-with abas[1]:
+with abas[1]: # --- Listar chamados
     st.title("lista de chamados") 
     chamados = listar_chamados_usuario(usuario["id"])
     if chamados["status"] == "sucesso":
         chamados_usuario = chamados["chamados"]
         
         if chamados_usuario:
-            st.write("Seus Chamados")
-            st.table(chamados_usuario)
+            st.dataframe(chamados_usuario)
+            
         else:
             st.info("Você ainda não abriu nenhum chamado.")
     else:
         st.error(chamados["mensagem"])
          
        
-with abas[2]:
+with abas[2]: # ---- Listar Solicitaçoes
     st.title("Lista de Solicitações")
     chamados = listar_chamados_usuario(usuario["id"])
     if chamados["status"] == "sucesso":
         chamados_usuario = chamados["chamados"]
         if chamados_usuario:
+            for c in chamados_usuario:
+                if c["status"] == "ABERTO":
+                    c["status"] = "ABERTO  🟢"
+                elif c["status"] == "FECHADO":
+                    c["status"] = "FECHADO  🔴"
+                elif c["status"] == "Em ANDAMENTO":
+                    c["status"] = "EM ANDAMENTO  🟡"
             solicitacoes_tbl = []
             for solicitacoes in chamados_usuario:
                 if solicitacoes["tipo"] == "Solicitação de compra":
