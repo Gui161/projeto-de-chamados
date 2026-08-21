@@ -6,8 +6,6 @@ import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from database.funcoes import abrir_chamado, listar_chamados
 
-def dados_finalizar_chamado():
-    st.popover(label="finalizar chamado")
 
 st.set_page_config(layout="wide", page_title="chamados/suporte")
 
@@ -15,7 +13,8 @@ if "usuario" not in st.session_state:
     st.error("Você precisa estar logado para acessar esta página.")
     st.stop()
 
-    
+                        
+                                
 
 data_abertura = datetime.now()
 data_abertura = data_abertura.date()
@@ -76,8 +75,9 @@ with abas[1]:
                             if escolher_chamado:
                                 st.session_state["chamado_id"] = c["id"]
                                 st.switch_page("pages/tela_chamado.py")
-                            
-                            
+
+
+
                 
                         
                     

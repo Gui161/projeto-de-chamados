@@ -61,7 +61,7 @@ def listar_chamados_usuario(usuario_id):
         }for linha in linhas]
         return {"status":"sucesso","chamados":chamados_usuario}
     except Exception as e:
-        print(e)
+        
         return {"status":"erro", "mensagem":"Erro ao carregar chamados"}
    
 

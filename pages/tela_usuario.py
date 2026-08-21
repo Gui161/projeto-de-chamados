@@ -89,12 +89,33 @@ with abas[2]: # ---- Listar Solicitaçoes
                     solicitacoes_tbl.append(solicitacoes)
             if solicitacoes_tbl == []:
                 st.info("Você ainda não fez nenhuma solicitação")
-            st.table(solicitacoes_tbl)
+            else:
+                for solicitacao in solicitacoes_tbl:
+                    with st.container(border=True):
+                        colunas = st.columns(3)
+                        with colunas[0]:
+                            st.write(f"Tipo: {solicitacao['tipo']}")
+                            st.write(f"Data de abertura: {solicitacao['data_abertura']}")
+                        with colunas[1]:
+                            st.text_area(label="Descrição:",  value=solicitacao['descricao'], )
+                        with colunas[2]:
+                            st.write(f"Status: {solicitacao['status']}")
+                            if solicitacao['status'] == "EM ANDAMENTO 🟡":
+                                responsavel = buscar_responsavel(solicitacao['id'])
+                                st.write(f"Em execução por : {responsavel['resultado'][0]}...⌛")
+                            
+                            if solicitacao['status'] == "FECHADO 🔴":
+                                responsavel = buscar_responsavel(solicitacao['id'])
+                                st.write(f"Executado: {responsavel['resultado'][0]}")
+                                st.write(f"Solução: {responsavel['resultado'][2]}")
+
         else:
             st.info("Você ainda não fez nenhuma solicitação")
     else:
         st.error(chamados["mensagem"])
             
-        
+
+
+    
         
         

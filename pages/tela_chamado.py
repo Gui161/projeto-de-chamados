@@ -103,3 +103,7 @@ if "chamado_id" in st.session_state:
 else:
     st.error("Nenhum chamado selecionado")
      
+
+
+
+    
