@@ -113,7 +113,7 @@ def listar_chamados():
         
         return {"status":"sucesso", "chamados":chamados}
     except Exception as e:
-        print(e)
+
         return {"status":"erro", "mensagem":"Erro ao carregar chamados"}
 
 
@@ -140,4 +140,17 @@ def finalizar_chamado(id_chamado, responsavel_id, tempo_gasto, solucao):
         return {"status":"sucesso", "mensagem":f"Chamado {id_chamado} Finalizado!"}
     except Exception as e:
         return {"status":"erro", "mensagem":f"Erro {e}"}
+
+
+
+def buscar_chamados_por_data(mes_escolhido, ano_escolhido):
+    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
+    cursor = con.cursor()
+    
+    try:
+        cursor.execute("""SELECT * FROM chamados WHERE substr(data_abertura, 4, 2) = ? AND substr(data_abertura, 7, 4) = ? """, (mes_escolhido, ano_escolhido,))
+        resultado = cursor.fetchall()
+        return {"status":"sucesso", "resultado":resultado}
+    except Exception as e:
+        return {"status":"erro", "resultado":e}
 
