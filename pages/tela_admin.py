@@ -5,16 +5,18 @@ import os
 import time
 import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from database.funcoes import abrir_chamado, listar_chamados, buscar_chamados_por_data
+from database.funcoes import abrir_chamado, listar_chamados, buscar_chamados_por_data, cadastrar_usuario
 
 
 st.set_page_config(layout="wide", page_title="chamados/suporte")
 
 if "usuario" not in st.session_state:
     st.error("Você precisa estar logado para acessar esta página.")
-    st.stop()
+    time.sleep(2)
+    st.switch_page("pages/login.py")
 
-
+if "mostrar_form" not in st.session_state:
+    st.session_state.mostrar_form = False
 
         
     
@@ -160,25 +162,32 @@ with abas[2]:
 
 
 with abas[3]: 
-    st.title("Gerenciar Usúarios", text_alignment="center")
+    st.title("Gerenciar Usuários", text_alignment="center")
     with st.container(border=True):
         colunas = st.columns(2)
         with colunas[0]:
-            criar_usuario_btn = st.button("Novo usuario",use_container_width=True)
+            criar_usuario_btn = st.button("➕ Criar novo usuário",use_container_width=True)
+            if criar_usuario_btn:
+                st.session_state.mostrar_form = True
+            
             
                 
         with colunas[1]:
-            listar_usuarios_btn = st.button("Listar Usuarios", use_container_width=True)
+            listar_usuarios_btn = st.button("Listar Usuários", use_container_width=True)
     
     
-    if criar_usuario_btn:
-                    with st.form("Formulario_add_usuario"):
-                        st.subheader("Cadastro de novos Usúarios", text_alignment="center")
-                        nome = st.text_input(label="Nome")
-                        email = st.text_input(label="E-mail")
-                        senha = st.text_input(label="Senha", type="password")
-                        tipo_acesso = st.selectbox(label="Tipo de Acesso",options=["usuario","admin", "suporte" ])
-                        cadastrar_btn = st.form_submit_button(label="Cadastrar Usúario")
+    
+    if (st.session_state.mostrar_form):
+        with st.form("cadastro_usuario"):
+            nome = st.text_input(label="Nome")
+            email = st.text_input(label="E-mail", )
+        st.session_state.mostrar_form = False
+        st.rerun()
+                
+                  
+    
+    if listar_usuarios_btn:
+        st.subheader("Lista de Usúario do sistema.", text_alignment="center")
                         
                            
     

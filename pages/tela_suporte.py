@@ -12,7 +12,8 @@ st.set_page_config(layout="wide", page_title="chamados/suporte")
 
 if "usuario" not in st.session_state:
     st.error("Você precisa estar logado para acessar esta página.")
-    st.stop()
+    time.sleep(2)
+    st.switch_page("pages/login.py")
 
                         
                                 

@@ -14,7 +14,8 @@ data_abertura = data_abertura.strftime("%d/%m/%y")
 
 if "usuario" not in st.session_state:
     st.error("Você precisa estar logado para acessar esta página.")
-    st.stop()
+    time.sleep(2)
+    st.switch_page("pages/login.py")
 
 usuario = st.session_state["usuario"]
 

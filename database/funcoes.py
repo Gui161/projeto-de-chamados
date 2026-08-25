@@ -129,6 +129,21 @@ def iniciar_chamado(id_chamado, responsavel_id):
         return {"status":"Erro", "mensagem":str(e)}
     
 
+def cadastrar_usuario(nome, email, senha, acesso):
+    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
+    cursor = con.cursor()
+    
+    try:
+        cursor.execute("INSERT INTO usuarios (nome, email, senha, acesso) VALUES (?, ?, ?, ?)", (nome, email, senha, acesso))
+        con.commit()
+        return {"status":"sucesso", "mensagem":f"O usuário {nome}, foi cadastrado com sucesso."} 
+    except Exception as e:
+        return {"status":"Erro", "mensagem":str(e)}
+
+
+
+        
+
 
 def finalizar_chamado(id_chamado, responsavel_id, tempo_gasto, solucao):
     con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
