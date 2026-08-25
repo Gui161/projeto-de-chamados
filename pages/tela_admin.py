@@ -5,7 +5,7 @@ import os
 import time
 import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from database.funcoes import abrir_chamado, listar_chamados, buscar_chamados_por_data, cadastrar_usuario
+from database.funcoes import abrir_chamado, listar_chamados, buscar_chamados_por_data, cadastrar_usuario, listar_usuarios, editar_usuario, excluir_usuario
 
 
 st.set_page_config(layout="wide", page_title="chamados/suporte")
@@ -18,7 +18,9 @@ if "usuario" not in st.session_state:
 if "mostrar_form" not in st.session_state:
     st.session_state.mostrar_form = False
 
-        
+
+if "mostrar_usuarios" not in  st.session_state:
+    st.session_state.mostrar_usuarios = False    
     
                         
                                 
@@ -168,12 +170,19 @@ with abas[3]:
         with colunas[0]:
             criar_usuario_btn = st.button("➕ Criar novo usuário",use_container_width=True)
             if criar_usuario_btn:
+                st.session_state.mostrar_usuarios = False
                 st.session_state.mostrar_form = True
+                st.rerun()
             
             
                 
         with colunas[1]:
             listar_usuarios_btn = st.button("Listar Usuários", use_container_width=True)
+            if listar_usuarios_btn:
+                st.session_state.mostrar_form = False
+                st.session_state.mostrar_usuarios = True
+                st.rerun()
+                
     
     
     
@@ -182,17 +191,75 @@ with abas[3]:
             nome = st.text_input(label="Nome")
             email = st.text_input(label="E-mail", type="email" )
             senha = st.text_input(label="Senha", type="password")
-            acesso = st
+            acesso = st.selectbox(label="Tipo de acesso:", options=["admin", "suporte", "usuario"])
             
             enviar_btn = st.form_submit_button(label="Cadastrar usuário", use_container_width=True)
             if enviar_btn:
-                st.session_state.mostrar_form = False
-                st.rerun()
+                if email != "" and senha != "" and nome != "":
+                    resultado = cadastrar_usuario(nome, email, senha, acesso)
+                    if resultado['status'] == "sucesso":
+                        st.success(resultado['mensagem'])
+                        time.sleep(2)
+                        st.session_state.mostrar_form = False
+                        st.rerun()
+                    else:
+                        st.error(resultado['mensagem'])
+                        time.sleep(2)
+                        st.session_state.mostrar_form = False
+                        st.rerun()
+                else:
+                    st.error("Preencha todos os campos para cadastrar usuário.")
+                    
+                    
                 
                   
     
-    if listar_usuarios_btn:
-        st.subheader("Lista de Usúario do sistema.", text_alignment="center")
+    if st.session_state.mostrar_usuarios:
+        st.subheader("Lista de Usuários do sistema.", text_alignment="center")
+        resposta = listar_usuarios()
+        usuarios = resposta['resultado']
+        
+        for usuario in usuarios:
+            
+            with st.container(border=True):
+                colunas = st.columns(4)
+                with colunas[0]:
+                    nome = st.text_input(label="Nome", value=usuario['nome'], key= f"nome {usuario['id']}")
+                    email = st.text_input(label="Email", value=usuario['email'], type="email", key= f"email {usuario['id']}")
+                
+                with colunas[1]:
+                    senha = st.text_input(label="Senha", value=usuario['senha'], key=f"senha {usuario['id']}")
+                    acesso = st.text_input(label="Tipo de acesso", value=usuario['acesso'], key=f"acesso {usuario['id']}")
+                    
+                with colunas[2]:
+                    st.space(50)
+                    editar_btn = st.button(label="Editar", key= f"editar_btn {usuario['id']}", use_container_width=True)
+                    if editar_btn:
+                        if nome != usuario['nome'] or email != usuario['email'] or senha != usuario['senha'] or acesso != usuario['acesso']:
+                            resposta = editar_usuario(usuario['id'], nome, email, senha, acesso)
+                            if resposta["status"] == "sucesso":
+                                st.success(resposta['mensagem'])
+                                time.sleep(2)
+                                st.rerun()
+                            else:
+                                st.error(resposta['mensagem'])
+                        else:
+                            st.info("Nenhuma informação alterada!")
+                    
+                        
+                    
+                with colunas[3]:
+                    st.space(50)
+                    excluir_btn = st.button(label="Excluir",key= f"excluir_btn {usuario['id']}", use_container_width=True)
+                    if excluir_btn:
+                        resultado = excluir_usuario(usuario['id'])
+                        if resultado['status'] == "sucesso":
+                            st.success(f"Usuario {usuario['nome']} Excluido!")
+                            time.sleep(2)
+                            st.rerun()
+                        else:
+                            st.error(resultado['mensagem'])
+        
                         
                            
     

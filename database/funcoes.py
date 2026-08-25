@@ -79,8 +79,28 @@ def buscar_responsavel(chamado_id):
         return {"status":"erro", "resultado":e}
 
 
-       
 
+def listar_usuarios():
+    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
+    cursor = con.cursor()
+    
+    try:
+        cursor.execute("SELECT * FROM usuarios")
+        linhas = cursor.fetchall()
+        usuarios = []
+        for linha in linhas:
+            usuarios.append( {
+                "id":linha[0],
+                "nome":linha[1],
+                "email":linha[2],
+                "senha":linha[3],
+                "acesso":linha[4]
+            })
+        
+        return {"status":"sucesso", "resultado":usuarios}
+    except Exception as e:
+        return {"status":"erro", "resultados":e}
+       
 
 def listar_chamados():
     con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
@@ -127,7 +147,29 @@ def iniciar_chamado(id_chamado, responsavel_id):
         return {"status": "sucesso", "mensagem":f"chamado {id_chamado} iniciado."}
     except Exception as e:
         return {"status":"Erro", "mensagem":str(e)}
+
+def editar_usuario(usuario_id, nome, email, senha, acesso):
+    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
+    cursor = con.cursor()
+    try:
+        cursor.execute("UPDATE usuarios SET nome = ?, email = ?, senha = ?, acesso = ? WHERE id = ?", (nome, email, senha, acesso, usuario_id,))
+        con.commit()
+        return {"status":"sucesso", "mensagem":f"Usuarios {nome} alterado com sucesso"}
+    except Exception as e:
+        return {"status":"erro", "mensagem":e}
+     
+def excluir_usuario(usuario_id):
+    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
+    cursor = con.cursor()
     
+    try:
+        cursor.execute("DELETE FROM usuarios WHERE id = ? ", (usuario_id,))
+        con.commit()
+        return{"status":"sucesso","mensagem":f"Usuario Excluido!"}
+    except Exception as e:
+        return{"status":"erro", "mensagem":e}
+
+
 
 def cadastrar_usuario(nome, email, senha, acesso):
     con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
