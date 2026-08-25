@@ -180,9 +180,14 @@ with abas[3]:
     if (st.session_state.mostrar_form):
         with st.form("cadastro_usuario"):
             nome = st.text_input(label="Nome")
-            email = st.text_input(label="E-mail", )
-        st.session_state.mostrar_form = False
-        st.rerun()
+            email = st.text_input(label="E-mail", type="email" )
+            senha = st.text_input(label="Senha", type="password")
+            acesso = st
+            
+            enviar_btn = st.form_submit_button(label="Cadastrar usuário", use_container_width=True)
+            if enviar_btn:
+                st.session_state.mostrar_form = False
+                st.rerun()
                 
                   
     
