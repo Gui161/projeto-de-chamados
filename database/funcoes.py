@@ -3,12 +3,15 @@ import os
 
 
 
-
+def criar_comunicao_banco():
+    db_path = os.path.join("database", "chamados.db")
+    con = sqlite3.connect(db_path)
+    cursor = con.cursor()
+    return cursor, con
 
 def fazer_login(email, senha):
     
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    cursor, con = criar_comunicao_banco()
 
     try:
         cursor.execute("SELECT id, nome, acesso, senha  FROM usuarios WHERE email = ?", (email,))
@@ -28,8 +31,7 @@ def fazer_login(email, senha):
     
     
 def abrir_chamado(tipo, descricao, usuario_id, data_abertura, departamento):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    cursor, con = criar_comunicao_banco()
 
     try:
         cursor.execute("INSERT INTO chamados(tipo, descricao, status, usuario_id, data_abertura, departamento) VALUES (?, ?, ?, ?, ?, ?)",
@@ -41,8 +43,9 @@ def abrir_chamado(tipo, descricao, usuario_id, data_abertura, departamento):
     
 
 def listar_chamados_usuario(usuario_id):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
+    
     try:
         
         cursor.execute("SELECT tipo, descricao, status, data_abertura, departamento, responsavel_id, tempo_gasto, solucao, id FROM chamados WHERE usuario_id = ?", (usuario_id,))
@@ -66,8 +69,7 @@ def listar_chamados_usuario(usuario_id):
    
 
 def buscar_responsavel(chamado_id):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    cursor, con = criar_comunicao_banco()
     try:
         cursor.execute("SELECT u.nome,c.tempo_gasto, c.solucao  FROM chamados c JOIN usuarios u ON c.responsavel_id = u.id WHERE c.id = ?", (chamado_id,) )
         resultado = cursor.fetchone()
@@ -81,8 +83,8 @@ def buscar_responsavel(chamado_id):
 
 
 def listar_usuarios():
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("SELECT * FROM usuarios")
@@ -103,8 +105,8 @@ def listar_usuarios():
        
 
 def listar_chamados():
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("""
@@ -138,8 +140,8 @@ def listar_chamados():
 
 
 def iniciar_chamado(id_chamado, responsavel_id):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("UPDATE chamados SET status = ?, responsavel_id = ? WHERE id = ?", ("EM ANDAMENTO 🟡", responsavel_id, id_chamado))
@@ -149,8 +151,9 @@ def iniciar_chamado(id_chamado, responsavel_id):
         return {"status":"Erro", "mensagem":str(e)}
 
 def editar_usuario(usuario_id, nome, email, senha, acesso):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
+    
     try:
         cursor.execute("UPDATE usuarios SET nome = ?, email = ?, senha = ?, acesso = ? WHERE id = ?", (nome, email, senha, acesso, usuario_id,))
         con.commit()
@@ -159,8 +162,8 @@ def editar_usuario(usuario_id, nome, email, senha, acesso):
         return {"status":"erro", "mensagem":e}
      
 def excluir_usuario(usuario_id):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("DELETE FROM usuarios WHERE id = ? ", (usuario_id,))
@@ -172,8 +175,8 @@ def excluir_usuario(usuario_id):
 
 
 def cadastrar_usuario(nome, email, senha, acesso):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("INSERT INTO usuarios (nome, email, senha, acesso) VALUES (?, ?, ?, ?)", (nome, email, senha, acesso))
@@ -188,8 +191,8 @@ def cadastrar_usuario(nome, email, senha, acesso):
 
 
 def finalizar_chamado(id_chamado, responsavel_id, tempo_gasto, solucao):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("UPDATE chamados SET status = ?, responsavel_id = ?, tempo_gasto = ?, solucao = ? WHERE id = ?", ("FECHADO 🔴", responsavel_id, tempo_gasto, solucao, id_chamado))
@@ -201,8 +204,8 @@ def finalizar_chamado(id_chamado, responsavel_id, tempo_gasto, solucao):
 
 
 def buscar_chamados_por_data(mes_escolhido, ano_escolhido):
-    con = sqlite3.connect(r"C:\Users\usuario\Desktop\sistema de chamados\projeto de chamados\database\chamados.db")
-    cursor = con.cursor()
+    
+    cursor, con = criar_comunicao_banco()
     
     try:
         cursor.execute("""SELECT * FROM chamados WHERE substr(data_abertura, 4, 2) = ? AND substr(data_abertura, 7, 4) = ? """, (mes_escolhido, ano_escolhido,))
