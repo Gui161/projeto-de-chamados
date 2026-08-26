@@ -5,6 +5,8 @@ import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from database.funcoes import fazer_login
 
+import os
+print("Arquivos disponíveis:", os.listdir("database"))
 
 st.title("Sistema de chamados Intermetro")
 
