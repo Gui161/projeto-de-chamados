@@ -17,7 +17,7 @@ if "chamado_id" in st.session_state:
             if c["id"] == st.session_state["chamado_id"]:
                 chamado_escolhido = c
                 with st.form("formulario_chamado", ):
-                    print(c)
+                    
                     st.title(f"Relatorio do chamado [ {c['descricao']} ]", text_alignment="center")
                     st.text_input(label="Solicitante", value=c['usuario'])
                     st.text_input(label="E-mail", value=c['email'])
@@ -52,6 +52,7 @@ if "chamado_id" in st.session_state:
                                 inicio = iniciar_chamado(st.session_state["chamado_id"], usuario['id'])
                                 if inicio['status'] == "sucesso":
                                     st.success(f"Chamado ID: {c['id']}, Iniciado por {usuario['nome']}")
+                                    st.rerun()
                                 else:
                                     st.error(inicio["mensagem"])
                         elif c['status'] in ["EM ANDAMENTO 🟡", "EM ANDAMENTO"]:
