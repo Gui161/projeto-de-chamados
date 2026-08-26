@@ -64,26 +64,34 @@ with abas[1]:
     if chamados['status'] == "sucesso":
         chamado = chamados['chamados']
         if chamado:
+            filtro_data = st.date_input(label="Filtrar por datas", format="DD/MM/YYYY")
+            data_escolhida = str(filtro_data)
+            mes_escolhido = data_escolhida[5:7]
+            ano_escolhido = data_escolhida[0:4]
+            data_final_escolhida = (f"{mes_escolhido}/{ano_escolhido}")   
+            print(data_final_escolhida)             
             filtro_status = st.multiselect(label="Filtar por status", options=["ABERTO 🟢", "EM ANDAMENTO 🟡", "FECHADO 🔴"])
             for c in chamado:
-                if c['status'] in filtro_status:
-                    with st.form(f"chamado {c["id"]}"):
-                        colunas = st.columns(3)
-                        with colunas[0]:
-                            st.write(f"nome: {c['usuario']}")
-                            st.write(f"Status atual: {c['status']}")
-                            st.write(f"tipo: {c['tipo']}")
-                        with colunas[1]:
-                            st.write(f"Data de abertura: {c['data_abertura']}")
-                            st.write(f"Setor: {c['setor']}")
-                            st.write(f"E-mail: {c['email']}")
-                        with colunas[2]:
-                            st.space(size="small")
-                            
-                            escolher_chamado = st.form_submit_button(label="Visualizar chamado", use_container_width=True)
-                            if escolher_chamado:
-                                st.session_state["chamado_id"] = c["id"]
-                                st.switch_page("pages/tela_chamado.py")
+                data_chamado = str(c['data_abertura'][3:])
+                if data_final_escolhida == data_chamado:
+                    if c['status'] in filtro_status:
+                        with st.form(f"chamado {c["id"]}"):
+                            colunas = st.columns(3)
+                            with colunas[0]:
+                                st.write(f"nome: {c['usuario']}")
+                                st.write(f"Status atual: {c['status']}")
+                                st.write(f"tipo: {c['tipo']}")
+                            with colunas[1]:
+                                st.write(f"Data de abertura: {c['data_abertura']}")
+                                st.write(f"Setor: {c['setor']}")
+                                st.write(f"E-mail: {c['email']}")
+                            with colunas[2]:
+                                st.space(size="small")
+                                
+                                escolher_chamado = st.form_submit_button(label="Visualizar chamado", use_container_width=True)
+                                if escolher_chamado:
+                                    st.session_state["chamado_id"] = c["id"]
+                                    st.switch_page("pages/tela_chamado.py")
 
 
 with abas[2]:
