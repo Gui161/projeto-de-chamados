@@ -24,7 +24,7 @@ def fazer_login(email, senha):
             return{"status":"Erro", "mensagem":"Usuario não encontrado"}
     except Exception as erro:
         
-        return {f"status":"Erro", "mensagem":"Erro ao efetuar login {erro}"}
+        return {"status":"Erro", "mensagem":f"Erro ao efetuar login {erro}"}
     
     
 def abrir_chamado(tipo, descricao, usuario_id, data_abertura, departamento):
