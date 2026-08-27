@@ -63,7 +63,7 @@ with abas[1]:
             mes_escolhido = data_escolhida[5:7]
             ano_escolhido = data_escolhida[0:4]
             data_final_escolhida = (f"{mes_escolhido}/{ano_escolhido}")   
-            print(data_final_escolhida)             
+                       
             filtro_status = st.multiselect(label="Filtar por status", options=["ABERTO 🟢", "EM ANDAMENTO 🟡", "FECHADO 🔴"])
             for c in chamado:
                 data_chamado = str(c['data_abertura'][3:])

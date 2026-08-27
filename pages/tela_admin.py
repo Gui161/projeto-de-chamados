@@ -27,13 +27,14 @@ if "mostrar_usuarios" not in  st.session_state:
 
 data_abertura = datetime.now()
 data_abertura = data_abertura.date()
-data_abertura = data_abertura.strftime("%d/%m/%y")
+data_abertura = data_abertura.strftime("%d/%m/%Y")
 
 usuario = st.session_state["usuario"]
 
 abas = st.tabs(["Novo chamado", "Listar chamados", "Análise de chamados", "Gerenciar usuarios"])
 
 with abas[0]: # ---Novo chamado
+    
     with st.form("formulario_de_solicitação", width="stretch", clear_on_submit=True):
         st.markdown("# Novo chamado 📝", text_alignment="center")
         nome = st.text_input(label="Nome:", value=usuario["nome"])
@@ -69,7 +70,7 @@ with abas[1]:
             mes_escolhido = data_escolhida[5:7]
             ano_escolhido = data_escolhida[0:4]
             data_final_escolhida = (f"{mes_escolhido}/{ano_escolhido}")   
-            print(data_final_escolhida)             
+                        
             filtro_status = st.multiselect(label="Filtar por status", options=["ABERTO 🟢", "EM ANDAMENTO 🟡", "FECHADO 🔴"])
             for c in chamado:
                 data_chamado = str(c['data_abertura'][3:])
