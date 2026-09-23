@@ -20,7 +20,8 @@ if "usuario" not in st.session_state:
 
 data_abertura = datetime.now()
 data_abertura = data_abertura.date()
-data_abertura = data_abertura.strftime("%d/%m/%y")
+data_abertura = data_abertura.strftime("%d/%m/%Y")
+
 
 usuario = st.session_state["usuario"]
 
@@ -65,6 +66,7 @@ with abas[1]:
             data_final_escolhida = (f"{mes_escolhido}/{ano_escolhido}")   
                        
             filtro_status = st.multiselect(label="Filtar por status", options=["ABERTO 🟢", "EM ANDAMENTO 🟡", "FECHADO 🔴"])
+            
             for c in chamado:
                 data_chamado = str(c['data_abertura'][3:])
                 if data_final_escolhida == data_chamado:

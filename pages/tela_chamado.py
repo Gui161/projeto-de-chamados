@@ -18,7 +18,7 @@ if "chamado_id" in st.session_state:
                 chamado_escolhido = c
                 with st.form("formulario_chamado", ):
                     
-                    st.title(f"Relatorio do chamado [ {c['descricao']} ]", text_alignment="center")
+                    st.title(f"Relatorio do chamado:  {c['descricao']} ", text_alignment="center")
                     st.text_input(label="Solicitante", value=c['usuario'])
                     st.text_input(label="E-mail", value=c['email'])
                     st.text_input(label="Tipo", value=c["tipo"])
@@ -47,9 +47,11 @@ if "chamado_id" in st.session_state:
                         st.write(f"Status {c['status']}")
                         if c['status'] in ["ABERTO", "ABERTO 🟢"]:
                             iniciar_chamado_btn = st.form_submit_button(label="Iniciar Realização do chamado", use_container_width=True)
+                            executante = st.selectbox(label="Executante do chamado", options=["Interno", "Externo"])
+                            sla_previsto = st.text_input(label="Tempo previsto para a execução(minutos)")
                             if iniciar_chamado_btn:
                                 
-                                inicio = iniciar_chamado(st.session_state["chamado_id"], usuario['id'])
+                                inicio = iniciar_chamado(id_chamado= st.session_state["chamado_id"],responsavel_id= usuario['id'], executante=executante, sla_previsto=sla_previsto)
                                 if inicio['status'] == "sucesso":
                                     st.success(f"Chamado ID: {c['id']}, Iniciado por {usuario['nome']}")
                                     st.rerun()
@@ -58,7 +60,9 @@ if "chamado_id" in st.session_state:
                         elif c['status'] in ["EM ANDAMENTO 🟡", "EM ANDAMENTO"]:
                             responsavel = buscar_responsavel(c['id'])
                             if responsavel:
-                                st.write(f"Chamado em execução por: {responsavel['resultado'][0]} ⌛")
+                                st.write(f"Responsavel: {responsavel['resultado'][0]} ⌛")
+                                st.write(f"Equipe: {responsavel['resultado'][2]}.")
+                                st.write(f"Deve ser finalizado em até: {responsavel['resultado'][3]} minutos.")
                         
                         
                         
@@ -70,7 +74,7 @@ if "chamado_id" in st.session_state:
                             finalizar_btn = st.form_submit_button(label= "Finalizar chamado", use_container_width=True)
                             
                             descricao_solucao = st.text_input(label="Solução do problema:")
-                            tempo_minuto = st.number_input("Tempo gasto(em minutos)", min_value=0, step=2)
+                            tempo_minuto = st.number_input("Tempo gasto(minutos)", min_value=0, step=2)
                             tempo_horas = tempo_minuto / 60
                             
                             

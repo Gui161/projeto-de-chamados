@@ -50,6 +50,7 @@ def listar_chamados_usuario(usuario_id):
         
         cursor.execute("SELECT tipo, descricao, status, data_abertura, departamento, responsavel_id, tempo_gasto, solucao, id FROM chamados WHERE usuario_id = ?", (usuario_id,))
         linhas = cursor.fetchall()
+        
         chamados_usuario = [{
             "tipo":linha[0],
             "descricao":linha[1],
@@ -71,7 +72,7 @@ def listar_chamados_usuario(usuario_id):
 def buscar_responsavel(chamado_id):
     cursor, con = criar_comunicao_banco()
     try:
-        cursor.execute("SELECT u.nome,c.tempo_gasto, c.solucao  FROM chamados c JOIN usuarios u ON c.responsavel_id = u.id WHERE c.id = ?", (chamado_id,) )
+        cursor.execute("SELECT u.nome,c.tempo_gasto,c.executante, c.sla_previsto, c.solucao  FROM chamados c JOIN usuarios u ON c.responsavel_id = u.id WHERE c.id = ?", (chamado_id,) )
         resultado = cursor.fetchone()
         if resultado:
             return {"status":"sucesso", "resultado":resultado}
@@ -114,7 +115,7 @@ def listar_chamados():
                        FROM chamados c
                        JOIN usuarios u ON c.usuario_id = u.id
                        """)
-        colunas = [desc[0] for desc in cursor.description]
+        
         linhas = cursor.fetchall()
         chamados = [{
             "id":linha[0],
@@ -126,8 +127,10 @@ def listar_chamados():
             "responsavel_id": linha[7],
             "tempo_gasto":linha[8],
             "solucao": linha[9],
-            "usuario":linha[10],
-            "email":linha[11]
+            "executante":linha[10],
+            "sla_previsto":linha[11],
+            "usuario":linha[12],
+            "email":linha[13]
             
         }for linha in linhas]
         
@@ -139,12 +142,12 @@ def listar_chamados():
         return {"status":"erro", "mensagem":"Erro ao carregar chamados"}
 
 
-def iniciar_chamado(id_chamado, responsavel_id):
+def iniciar_chamado(id_chamado, responsavel_id, executante, sla_previsto):
     
     cursor, con = criar_comunicao_banco()
     
     try:
-        cursor.execute("UPDATE chamados SET status = ?, responsavel_id = ? WHERE id = ?", ("EM ANDAMENTO 🟡", responsavel_id, id_chamado))
+        cursor.execute("UPDATE chamados SET status = ?, responsavel_id = ?, executante = ?, sla_previsto = ? WHERE id = ?", ("EM ANDAMENTO 🟡", responsavel_id,executante, sla_previsto, id_chamado))
         con.commit()
         return {"status": "sucesso", "mensagem":f"chamado {id_chamado} iniciado."}
     except Exception as e:

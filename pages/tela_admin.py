@@ -29,6 +29,7 @@ data_abertura = datetime.now()
 data_abertura = data_abertura.date()
 data_abertura = data_abertura.strftime("%d/%m/%Y")
 
+
 usuario = st.session_state["usuario"]
 
 abas = st.tabs(["Novo chamado", "Listar chamados", "Análise de chamados", "Gerenciar usuarios"])
@@ -162,9 +163,9 @@ with abas[2]:
         if resultado["status"] == "sucesso":
             chamados_mes = resultado["resultado"]
             if chamados_mes != []:
-                colunas = ["ID", "Tipo","Descição","Status", "usuario id", "Data de Abertura", "Setor", "Responsavel", "Tempo gasto", "Solução" ]
+                colunas = ["ID", "Tipo","Descição","Status", "usuario id", "Data de Abertura", "Setor", "Responsavel", "Tempo gasto", "Solução", "executante", "Sla Previsto" ]
                 df = pd.DataFrame(chamados_mes, columns=colunas)
-                st.dataframe(df, column_order=("Tipo","Descição","Data de Abertura", "Setor", "Status"), height="content")
+                st.dataframe(df, column_order=("Tipo","Descição","Data de Abertura", "Setor", "Status", "executante", ), height="content")
                 
             else:
                 st.info("Não existem registros para esta data.")

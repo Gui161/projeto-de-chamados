@@ -10,7 +10,7 @@ st.set_page_config(layout="wide", page_title="chamados/usuarios")
 
 data_abertura = datetime.now()
 data_abertura = data_abertura.date()
-data_abertura = data_abertura.strftime("%d/%m/%y")
+data_abertura = data_abertura.strftime("%d/%m/%Y")
 
 if "usuario" not in st.session_state:
     st.error("Você precisa estar logado para acessar esta página.")
@@ -65,11 +65,13 @@ with abas[1]: # --- Listar chamados
                         if chamado['status'] == "EM ANDAMENTO 🟡":
                             responsavel = buscar_responsavel(chamado['id'])
                             st.write(f"Em execução por : {responsavel['resultado'][0]}...⌛")
+                            st.write(f"Equipe: {responsavel['resultado'][2]}.")
+                            st.write(f"Deve ser finalizado em até: {responsavel['resultado'][3]} minutos.")
                         
                         if chamado['status'] == "FECHADO 🔴":
                             responsavel = buscar_responsavel(chamado['id'])
                             st.write(f"Executado: {responsavel['resultado'][0]}")
-                            st.write(f"Solução: {responsavel['resultado'][2]}")
+                            st.write(f"Solução: {responsavel['resultado'][4]}")
                             
             
         else:
@@ -108,7 +110,7 @@ with abas[2]: # ---- Listar Solicitaçoes
                             if solicitacao['status'] == "FECHADO 🔴":
                                 responsavel = buscar_responsavel(solicitacao['id'])
                                 st.write(f"Executado: {responsavel['resultado'][0]}")
-                                st.write(f"Solução: {responsavel['resultado'][2]}")
+                                st.write(f"Solução: {responsavel['resultado'][4]}")
 
         else:
             st.info("Você ainda não fez nenhuma solicitação")
